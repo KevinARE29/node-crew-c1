@@ -61,6 +61,7 @@
   },
   "husky": {
     "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-commit": "lint-staged",
       "pre-push": "lint-staged && npm run test:cov && npm run test:e2e && npm run sonar:run"
     }
