@@ -21,7 +21,7 @@ export class AppController {
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: FileDto })
   @Post('upload')
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
-    console.log(file);
+  uploadFile(@UploadedFile() file: Express.Multer.File): Promise<void> {
+    return this.appService.uploadFile(file);
   }
 }
