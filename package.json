@@ -1,7 +1,7 @@
 {
   "name": "node-crew-c1",
   "version": "0.0.1",
-  "description": "",
+  "description": "NodeJS Crew Challenge 1",
   "author": "Kevin Rodriguez",
   "license": "MIT",
   "scripts": {
@@ -70,6 +70,9 @@
       "pre-commit": "lint-staged",
       "pre-push": "lint-staged && npm run test:cov && npm run test:e2e && npm run sonar:run"
     }
+  },
+  "engines": {
+    "node": ">=12.18"
   },
   "jest": {
     "moduleFileExtensions": [
