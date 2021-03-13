@@ -3,7 +3,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { AppService } from './app.service';
 import { MultipartGuard } from '../core/guards/multipart.guard';
-import { ImageValidatorInterceptor } from '../core/interceptors/image-validator.interceptor';
+import { FileValidatorInterceptor } from '../core/interceptors/image-validator.interceptor';
 import { FileDto } from './dtos/request/file.dto';
 
 @Controller()
@@ -17,7 +17,7 @@ export class AppController {
 
   @Post('upload')
   @UseGuards(MultipartGuard)
-  @UseInterceptors(FileInterceptor('file'), ImageValidatorInterceptor)
+  @UseInterceptors(FileInterceptor('file'), FileValidatorInterceptor)
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: FileDto })
   @Post('upload')
