@@ -2,74 +2,150 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>
 
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
-<a href="https://gitter.im/nestjs/nestjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/nestjs/nestjs.svg" alt="Gitter" /></a>
-<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
-  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# NodeJS Crew Challenge 1
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Create a simple Node RESTful api with 2 endpoints that allows upload/download of a file.
+
+The file types that should be allowed to be uploaded:
+
+- Doc types (word, excel and pdf )
+- Images ( jpeg and png )
+
+The api should store the files in a folder in the project root directory or volume if using docker, the files in the folder should be encrypted and unreadable in the folder.
+
+The file should be readable only when it is downloaded using the download endpoint.
+
+When the file uploaded is an image, then the api should create a thumbnail of the file, the thumbnail should be encrypted too and be downloadable using the endpoint. This means that for image upload the API should store 2 files in disk.
+
+## Table of Contents
+
+- [Before Install](#before-install)
+- [Installation](#installation)
+- [Running the app](#running-the-app)
+- [Test](#test)
+- [Migrations](#migrations)
+
+## Before Install
+
+Make sure you have NodeJS, npm, Docker and docker-compose installed.
+
+Before install our project, env variables must be set.
+
+<center>
+
+| Environment Variable Key | Environment Variable Value   |
+| ------------------------ | ---------------------------- |
+| API_PORT                 | 3000                         |
+| NODE_ENV                 | [dev, staging, production]   |
+| AES_KEY                  | [The AES Key for encryption] |
+| AES_IV                   | [The AES IV for encryption]  |
+
+</center>
+
+Both setups, docker and local, will be shown here.
 
 ## Installation
 
+#### Local
+
 ```bash
-$ npm install
+$ npm i
+```
+
+#### Docker
+
+```bash
+$ docker-compose build
 ```
 
 ## Running the app
 
+Make sure the env variables are correct.
+
+#### Local
+
 ```bash
-# development
+# production
 $ npm run start
 
-# watch mode
+# development
 $ npm run start:dev
+```
 
-# production mode
-$ npm run start:prod
+#### Docker
+
+In this case, it only runs in development mode
+
+```bash
+$ docker-compose up
 ```
 
 ## Test
 
+#### Local
+
+Running tests
+
 ```bash
-# unit tests
+# run all tests only once
 $ npm run test
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+# run tests with a watcher
+$ npm run test:watch
 ```
+
+### Docker
+
+There are two options to run the tests with Docker. They can be called from the outside of the container, or they can be called from the inside the bash console of container.
+
+_Outside of the container_
+
+```bash
+# run all tests only once
+$ docker-compose run api npm run test
+
+# run tests with a watcher
+$ docker-compose run api npm run test:watch
+```
+
+_Inside of the container_
+
+First, enter to bash console
+
+```bash
+$ docker-compose run api bash
+```
+
+Inside of the container run the same commands as they are being ran in local.
+
+```bash
+# run all tests only once
+$ npm run test
+
+# run tests with a watcher
+$ npm run test:watch
+```
+
+## Team
+
+<table>
+   <tr>
+      <td align="center">
+         <a href="https://github.com/KevinARE29">
+         <img src="https://avatars1.githubusercontent.com/u/22019795?v=4" width="250" />
+         <br />
+         <sub>Kevin Rodríguez</sub>
+         </a>
+      </td>
+   </tr>
+</table>
+
+## API Documentation
+
+Swagger documentation can be found at [NodeJS Crew C1](https://node-crew-c1.herokuapp.com/api/docs/)
 
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-  Nest is [MIT licensed](LICENSE).
