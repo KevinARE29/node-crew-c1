@@ -37,7 +37,7 @@ Before install our project, env variables must be set.
 
 | Environment Variable Key | Environment Variable Value   |
 | ------------------------ | ---------------------------- |
-| API_PORT                 | 3000                         |
+| PORT                     | 3000                         |
 | NODE_ENV                 | [dev, staging, production]   |
 | AES_KEY                  | [The AES Key for encryption] |
 | AES_IV                   | [The AES IV for encryption]  |
