@@ -22,7 +22,7 @@ export class AppService {
     this.iv = this.configService.get<string>('AES_IV');
     this.key = this.configService.get<string>('AES_KEY');
     this.destFolder = this.configService.get<string>('DEST_FOLDER');
-    this.imgWhitelist = this.configService.get<string>('IMAGES_EXTENSION_WHITE_LIST').split(',');
+    this.imgWhitelist = this.configService.get<string>('IMAGES_EXTENSION_WHITE_LIST')?.split(',');
   }
 
   getHello(): string {
