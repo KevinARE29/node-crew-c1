@@ -12,6 +12,8 @@ import { AppService } from './app.service';
       isGlobal: true,
       validationSchema: Joi.object({
         PORT: Joi.number().default(3000),
+        AES_IV: Joi.string().required(),
+        AES_KEY: Joi.string().required(),
         DEST_FOLDER: Joi.string().default('./upload'),
         DOCS_EXTENSION_WHITE_LIST: Joi.string().default('doc,docx,xls,xlsx,pdf'),
         IMAGES_EXTENSION_WHITE_LIST: Joi.string().default('jpeg,png'),
