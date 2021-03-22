@@ -31,6 +31,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
     "rxjs": "^6.5.4",
+    "sharp": "^0.27.2",
     "swagger-ui-express": "^4.1.6"
   },
   "devDependencies": {
@@ -41,7 +42,9 @@
     "@nestjs/testing": "^6.10.14",
     "@types/express": "^4.17.2",
     "@types/jest": "25.1.2",
-    "@types/node": "^13.1.6",
+    "@types/multer": "^1.4.5",
+    "@types/node": "^13.13.47",
+    "@types/sharp": "^0.27.1",
     "@types/supertest": "^2.0.8",
     "@typescript-eslint/eslint-plugin": "^2.12.0",
     "@typescript-eslint/parser": "^2.12.0",
@@ -69,7 +72,7 @@
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-commit": "lint-staged",
-      "pre-push": "lint-staged && npm run test:cov && npm run test:e2e && npm run sonar:run"
+      "pre-push": "npm run format && npm run lint && npm run test:cov && npm run test:e2e && npm run sonar:run"
     }
   },
   "engines": {
