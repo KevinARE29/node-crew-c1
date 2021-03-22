@@ -1,21 +1,28 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { parse } from 'path';
-import { createWriteStream } from 'fs';
-import { pipeline } from 'stream';
+import { createWriteStream, createReadStream } from 'fs';
+import { pipeline, Readable } from 'stream';
+import { promisify } from 'util';
 import { createCipheriv, createDecipheriv } from 'crypto';
+import { createGzip, createGunzip } from 'zlib';
+import { Response } from 'express';
+import * as sharp from 'sharp';
 
-const streamifier = require('streamifier');
+const promisePipeline = promisify(pipeline);
 
 @Injectable()
 export class AppService {
   private readonly iv: string;
   private readonly key: string;
+  private readonly destFolder: string;
+  private readonly imgWhitelist: string[];
 
   constructor(private readonly configService: ConfigService) {
     this.iv = this.configService.get<string>('AES_IV');
     this.key = this.configService.get<string>('AES_KEY');
+    this.destFolder = this.configService.get<string>('DEST_FOLDER');
+    this.imgWhitelist = this.configService.get<string>('IMAGES_EXTENSION_WHITE_LIST').split(',');
   }
 
   getHello(): string {
@@ -23,27 +30,43 @@ export class AppService {
   }
 
   async uploadFile(file: Express.Multer.File): Promise<void> {
-    const { name, ext } = parse(file.originalname);
-    const destFolder = this.configService.get<string>('DEST_FOLDER');
-    const filePath = `${destFolder}/${name}.enc`;
-    const env = this.configService.get<string>('NODE_ENV');
-    if (env !== 'production') {
-      return this.saveOnLocalFolder(filePath, file);
-    } else {
-      return this.saveOnCloudProvider();
+    try {
+      const { name, ext } = parse(file.originalname);
+      const filePath = `${this.destFolder}/${name}${ext}.gz.enc`;
+      const fileStream = Readable.from(file.buffer);
+
+      await promisePipeline(
+        fileStream,
+        createGzip(),
+        createCipheriv('aes-256-ctr', this.key, this.iv),
+        createWriteStream(filePath),
+      );
+
+      if (this.imgWhitelist.includes(ext.toLowerCase().replace('.', ''))) {
+        const thumbnailStream = Readable.from(file.buffer);
+        const thumbnailPath = `${this.destFolder}/${name}-thumbnail${ext}.gz.enc`;
+        const resizeImage = sharp().resize({ width: 100, height: 100 });
+
+        await promisePipeline(
+          thumbnailStream,
+          resizeImage,
+          createGzip(),
+          createCipheriv('aes-256-ctr', this.key, this.iv),
+          createWriteStream(thumbnailPath),
+        );
+      }
+    } catch (err) {
+      console.error(err);
     }
   }
 
-  private async saveOnLocalFolder(filePath: string, file: Express.Multer.File): Promise<void> {
-    pipeline(
-      streamifier.createReadStream(file.buffer),
-      createCipheriv('aes-256-gcm', this.key, this.iv),
-      createWriteStream(filePath),
-      err => {
-        console.error(err);
-      },
-    );
+  async downloadFile(path: string, res: Response): Promise<void> {
+    try {
+      res.attachment(path);
+      const fileStream = createReadStream(`${this.destFolder}/${path}.gz.enc`);
+      await promisePipeline(fileStream, createDecipheriv('aes-256-ctr', this.key, this.iv), createGunzip(), res);
+    } catch (err) {
+      console.error(err);
+    }
   }
-
-  private async saveOnCloudProvider(): Promise<void> {}
 }
